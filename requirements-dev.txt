@@ -1,0 +1,4 @@
+-r requirements.txt # makes sure all prod dependencies are installed as well
+ruff
+pytest
+httpx2
