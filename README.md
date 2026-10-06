@@ -1153,14 +1153,14 @@ non-generator dependencies. A named nested function is easier to read, mirrors t
 
 ## My Steps & Learnings (Human Notes)
 
-1. Create virtual environment
+### 1. Create virtual environment
 
 ```bash
 python3 -m venv .venv
 # python run module venv <virtual environment name>
 ```
 
-2. Activate that environment
+### 2. Activate that environment
 
 ```bash
 source .venv/bin/activate
@@ -1168,7 +1168,7 @@ source .venv/bin/activate
 
 -> prefixes the prompt with `(venv)`
 
-3. Install dependencies (in active `venv`)
+### 3. Install dependencies (in active `venv`)
 
 ```bash
 pip install fastapi uvicorn
@@ -1176,7 +1176,7 @@ pip install fastapi uvicorn
 pip list
 ```
 
-4. create `requirements.txt`
+### 4. create `requirements.txt`
 
 ```bash
 pip freeze > requirements.txt
@@ -1191,7 +1191,7 @@ Next time, requirements can be installed via
 pip install -r requirements.txt
 ```
 
-4. 1. create dev-dependencies `requirements-dev.txt`
+### 5. create dev-dependencies `requirements-dev.txt`
 
 **Ruff** is a Python Formatter and Linter tool. Install as dev-dependency and VSCode extension. Then make sure it's referenced in `.vscode/settings.json`.
 
@@ -1200,7 +1200,7 @@ ruff check --fix .
 #runs the linter on current directory
 ```
 
-5. run the server
+### 6. run the server
 
 ```bash
 uvicorn main:app --reload
@@ -1209,7 +1209,7 @@ uvicorn main:app --reload
                 # restart automatically on file changes
 ```
 
-6. Test the server
+### 7. Test the server
 
 - http://127.0.0.1:8000/ → the greeting as JSON
 - http://127.0.0.1:8000/health → the status object
@@ -1218,13 +1218,13 @@ uvicorn main:app --reload
 
 > FastAPI sets the HTTP header `content-type: application/json` automatically from the returned Python dictionary.
 
-7. defining URL params
+### 8. defining URL params
 
 > FastAPI uses type hints to parse and validate url parameters. If a value can't be validated it will return a HTTP `422` (unprocessable entity) error.
 
 > type hints `name: type` are completely ignored by Python at runtime. They're metadata and are more meant for type checkers and editors, and in this case FastAPI
 
-8. using Pydantic models
+### 9. using Pydantic models
 
 - body validation for `POST` requests using a schema (declaration of what a valid task looks like)
 - create a Pydantic model for each request route that expects a body input
@@ -1232,13 +1232,13 @@ uvicorn main:app --reload
 - using the `/docs` endpoint to test the `POST` requests from the browser!
 - dot notation works on pydantic models (objects) but not on Python dictionaries (string notation)
 
-9. `HTTPExceptions`
+### 10. `HTTPExceptions`
 
 - FastAPI will convert any raised `HTTPException` to a proper response
 - `raise` instead of `return` in order to abort the function early and unwind the call stack (equivalent to `throw` in JS)
 - status codes are declared in the decorator (will be picked up by `/docs`)
 
-10. Update and Delete Routes
+### 11. Update and Delete Routes
 
 - `PUT` is a replacement (body requires all fields), `PATCH` is a merge (body fields are optional)
 - idempotency means doing something multiple times but leaving the system in the same state as doing it once
@@ -1246,7 +1246,7 @@ uvicorn main:app --reload
 - side note: `POST` is not idempotent, hence some sensible APIs (like payment APIs) will require an "idempotency key" with the request for verification in case of server time outs etc.
 - `204 No Content` response mustn't have a body
 
-11. Query parameters (filters)
+### 12. Query parameters (filters)
 
 - query parameters are set in the route function as arguments
 - FastAPI will infer that they're query parameters because they're not in the path
@@ -1254,26 +1254,26 @@ uvicorn main:app --reload
 - FastAPI parses `true`, `1`, `yes`, `on` as `True` and `false`, `0`, `no`, `off` as `False`
 - unknown query params are ignored, not errored
 
-12. Project Structure
+### 13. Project Structure
 
 - split files by responsibility
 - modules (`.py` files) and packages (`folders/` with `__init__.py` files) -> a folder becomes a package with an empty `__init__.py` file
 - using `tags` in the `APIRouter` of FastAPI groups routes into these categories in `/docs`
 
-13. `Depends`
+### 14. `Depends`
 
 > FastAPI feature: declare a parameter by the return result of a function
 
 - using FastAPI's dependencies in parameters, makes them appear in the OpenAPI schema (`/docs`)
 - order in params is important -> declare defaults after non-defaults!
 
-14. SQL database
+### 15. SQL database
 
 > SQL has no type constraints! -> use pydantic models to validate types before anything goes into the database
 
 - boolean values will be 0/1 in SQL and need conversion in the app (that's what an ORM is for)
 
-15. Wiring up the database
+### 16. Wiring up the database
 
 We can write a `yield` function that creates the db connection, yields the connection to where ever the function was called (in the API routes) and after the route is done, the yield function continues to close the connection. Otherwise every API route would have to create a connection, use it, and close it again, which may cause write blocks on the db. This way, we have one connection handler (like a middleware) that does the clean up as well. `yield` functions only pause and return where as `return` functions finish the function entirely.
 We can then use this `yield` function as a FastAPI dependency when declaring the database in the route.
@@ -1281,7 +1281,7 @@ We can then use this `yield` function as a FastAPI dependency when declaring the
 - sql connection `.execute` returns a sqlite cursor object! (need to use a method to return row/rows)
 - don't forget `.commit()` after every WRITE operation!
 
-16. Automated Tests
+### 17. Automated Tests
 
 - FastAPI comes with a test client that mirrors the `httpx` library
 
