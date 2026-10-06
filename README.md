@@ -2,6 +2,14 @@
 
 I wanted to learn a bit more about building a server using FastAPI and refresh my Python skills, so I've used AI as my tutor and guide me through building this project. All code is written by myself and below are the steps taken for building this app and my learnings.
 
+**Jump Ahead**
+
+## → [Concepts learnt (AI summary)](#concepts-learnt-ai-summary)
+
+## → [My Steps & Learnings (Human Notes)](#my-steps--learnings-human-notes)
+
+## → [Recap (AI summary)](#recap-ai-summary)
+
 ## Concepts learnt (AI summary)
 
 The concept introduction from each lesson, in the order they were taught.
